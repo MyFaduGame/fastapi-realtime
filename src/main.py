@@ -21,9 +21,16 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             data = await websocket.receive_json()
             logger.info(data)
-            await websocket.send_json(dumps(data))
+            u_data = data["message"] + 1
+            # logger.info(data)
+            await websocket.send_json(dumps(u_data))
     except WebSocketDisconnect:
         await manager.disconnect(websocket)
+        
+@app.get("/test/{number}")
+async def ping(number:int=1):
+    logger.info("here is the ping api which is calling via HTTP")
+    return {'data':number+1}
 
 # if __name__ == "__main__":
 #     import uvicorn
